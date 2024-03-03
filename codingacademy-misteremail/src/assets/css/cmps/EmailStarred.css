@@ -1,0 +1,13 @@
+
+
+.star:hover{
+    content: attr(alt);
+    /* transform: translateX(-50%); */
+    background-color:  darkgray;
+    /* color: transparent; */
+    /* padding: 5px; */
+    border-radius: 60px;
+    /* border: 2px solid black; */
+    /* display: block; */
+    cursor: pointer;
+}
