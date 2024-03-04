@@ -1,13 +1,27 @@
+import { Outlet, Route, HashRouter as Router, Routes } from 'react-router-dom'
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { EmailIndex } from './pages/EmailIndex'
-function App() {
+
+
+import { EmailIndex } from './pages/EmailIndex.jsx'
+import { EmailDetails } from './pages/EmailDetails.jsx'
+import { SideBar } from "./cmps/SideBar.jsx"
+
+export function App() {
 
   return (
-    <EmailIndex/>
+    <Router>
+      <section className='main-app'>
+        <SideBar />
+        <main className='container'>
+          <Routes>
+            <Route path="/email" element={<EmailIndex />}/>
+            <Route path="/email/:emailId" element={<EmailDetails />} />
+          </Routes>
+        </main>
+      </section>
+    </Router>
   )
 }
 
-export default App
+
+// export default App

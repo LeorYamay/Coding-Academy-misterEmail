@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { emailService } from "../services/email.service"
 import { EmailList } from "../cmps/EmailList.jsx"
-import { SideBar } from "../cmps/SideBar.jsx"
+
 
 
 
@@ -28,9 +28,6 @@ export function EmailIndex() {
     async function onRemoveEmail(emailId) {
         try {
             await emailService.remove(emailId)
-            // Never just load robots again
-            // loadRobots()
-
             setEmails((prevEmails) => {
                 return prevEmails.filter(email => email.id !== emailId)
             })
@@ -48,13 +45,13 @@ export function EmailIndex() {
         }
     }
 
-    console.log('emails' , emails)
+    // console.log('emails' , emails)
     if (!emails) return <div>Loading...</div>
     return <section className="email-index">
         <EmailList 
         emails={emails} 
         onRemoveEmail = {onRemoveEmail} 
         onUpdateEmail = {onUpdateEmail}/>
-        <SideBar/>
+        
     </section>
 }

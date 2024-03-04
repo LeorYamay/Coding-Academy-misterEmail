@@ -15,30 +15,43 @@ const STORAGE_KEY = 'emails'
 _createEmails()
 
 async function query(filterBy) {
-    const emails = await storageService.query(STORAGE_KEY)
+    const emails = await storageService.query(STORAGE_KEY);
+
     if (filterBy) {
-        var { subject, body, isRead, isStarred, sentBefore,sentAfter,inTrash,from,to} = filterBy
-        sentBefore = sentBefore || new Date()
-        sentAfter = sentAfter || Date.now()+1000
-        const trashFilter = !(inTrash)?true:
-        emails = emails.filter(email => email.body.toLowerCase().includes(body.toLowerCase())
-        &&(isRead != null)?email.isRead===isRead:true
-        &&(isStarred != null)?email.isStarred===isStarred:true
-        && sentBefore<email.sentAt
-        && sentAfter>email.sentAt
-        && inTrash === null || !!inTrash === !!email.removedAt
-        && email.from.toLowerCase()===from.toLowerCase()
-        &&email.to.toLowerCase() === to.toLowerCase()
-        )
+        const { subject, body, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to } = filterBy;
+
+        return emails.filter((email) => {
+            const isSubjectMatch = subject ? email.subject.toLowerCase().includes(subject.toLowerCase()) : true
+            const isBodyMatch = body ? email.body.toLowerCase().includes(body.toLowerCase()) : true
+            const isReadMatch = !(isRead == null) ? email.isRead === isRead : true
+            const isStarredMatch = !(isStarred == null) ? email.isStarred === isStarred : true
+            const isSentBefore = sentBefore ? sentBefore < email.sentAt : true
+            const isSentAfter = sentAfter ? sentAfter > email.sentAt : true
+            
+            const isInTrashMatch = (inTrash == null)|| (!inTrash ? !(email.removedAt) : (email.removedAt))
+
+            const isFromMatch = from ? email.from.toLowerCase() === from.toLowerCase() : true
+            const isToMatch = to ? email.to.toLowerCase() === to.toLowerCase() : true
+
+            const fitlerRes = isSubjectMatch &&
+            isBodyMatch &&
+            isReadMatch &&
+            isStarredMatch &&
+            isSentBefore &&
+            isSentAfter &&
+            isInTrashMatch &&
+            isFromMatch &&
+            isToMatch
+            return fitlerRes
+        })
     }
-    return emails
+
+    return emails;
 }
 
 function getDefaultFilter() {
     return {
-        subject: '',
-        body: '',
-        isStarred:false
+        inTrash:false
     }
 }
 function getById(id) {
@@ -89,7 +102,8 @@ function _createEmails() {
             isRead: _getRandomBoolean(),
             isStarred: _getRandomBoolean(),
             from: _generateRandomEmail(),
-            to: _generateRandomEmail()
+            to: _generateRandomEmail(),
+            sentAt: _getRandomDateInPast()
         }
     }
 }
@@ -151,3 +165,19 @@ function _generateRandomString(length) {
 function _getRandomBoolean() {
     return Math.random() < 0.5; // Will return true approximately 50% of the time
 }
+
+function _getRandomDateInPast() {
+    const currentDate = new Date();
+    const pastDate = new Date(currentDate);
+    
+    // Set the range for the past date (e.g., 1 year ago)
+    pastDate.setFullYear(currentDate.getFullYear() - 1);
+    
+    // Generate a random number of milliseconds within the past year
+    const randomMilliseconds = Math.floor(Math.random() * (currentDate - pastDate));
+    
+    // Set the random date
+    pastDate.setTime(currentDate.getTime() - randomMilliseconds);
+    
+    return pastDate;
+  }
