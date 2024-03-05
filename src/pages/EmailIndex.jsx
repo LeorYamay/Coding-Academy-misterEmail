@@ -12,6 +12,7 @@ export function EmailIndex() {
     useEffect(() => {
         loadEmails()
     }, [filterBy])
+
     function onSetFilter(fieldsToUpdate) {
         setFilterBy(prevFilter => ({ ...prevFilter, ...fieldsToUpdate }))
     }
@@ -28,9 +29,7 @@ export function EmailIndex() {
     async function onRemoveEmail(emailId) {
         try {
             await emailService.remove(emailId)
-            setEmails((prevEmails) => {
-                return prevEmails.filter(email => email.id !== emailId)
-            })
+            setEmails(prevEmails => prevEmails.filter(email => email.id !== emailId))
         } catch (err) {
             console.log('Error in onRemoveEmail', err)
         }
@@ -48,10 +47,10 @@ export function EmailIndex() {
     // console.log('emails' , emails)
     if (!emails) return <div>Loading...</div>
     return <section className="email-index">
-        <EmailList 
-        emails={emails} 
-        onRemoveEmail = {onRemoveEmail} 
-        onUpdateEmail = {onUpdateEmail}/>
-        
+        <EmailList
+            emails={emails}
+            onRemoveEmail={onRemoveEmail}
+            onUpdateEmail={onUpdateEmail} />
+
     </section>
 }
