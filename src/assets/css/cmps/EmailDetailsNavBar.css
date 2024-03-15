@@ -1,0 +1,16 @@
+.email-details-navbar{
+    display: flex;
+    align-items: center;
+    justify-content:start;
+    padding: 5px;
+}
+.email-details-navbar >*:hover{
+    content: attr(alt);
+    background-color:  darkgray;
+    /* color: transparent; */
+    padding: 5px;
+    border-radius: 60px;
+    /* border: 2px solid black; */
+    /* display: block; */
+    cursor: pointer;
+}

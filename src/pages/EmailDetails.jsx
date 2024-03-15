@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 
-import { EmailDetailNavBar } from "../cmps/EmailDetailsNavBar";
 import { emailService } from "../services/email.service";
+
+import { EmailDetailNavBar } from "../cmps/EmailDetailsNavBar";
 
 export function EmailDetails() {
     const [email, setEmail] = useState(null)
@@ -14,6 +15,15 @@ export function EmailDetails() {
         loadEmail()
 
     }, [params.emailId])
+
+    async function onUpdateEmail(email) {
+        try {
+            const updatedEmail = await emailService.save(email)
+            setEmail(updatedEmail)
+        } catch (err) {
+            console.log('Error in onUpdateEmail', err)
+        }
+    }
 
     async function loadEmail() {
         try {
@@ -28,7 +38,10 @@ export function EmailDetails() {
     
     return (
         <section className="email-details">
-            <EmailDetailNavBar/>
+            <EmailDetailNavBar
+                email = {email}
+                onUpdateEmail ={onUpdateEmail}
+            />
            <div className="email-details-subject">{email.subject}</div>
             <div className="email-details-from">{email.from}</div>
             <div className="email-details-to">{`to ${email.to}`}</div>

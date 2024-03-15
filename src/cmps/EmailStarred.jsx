@@ -1,5 +1,7 @@
-import emptyStar from '../assets/imgs/emptyStar.png';
-import fullStar from '../assets/imgs/fullStar.png';
+import StarIcon from '@mui/icons-material/Star';
+import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
+import { yellow } from '@mui/material/colors';
+
 
 export function EmailStarred({email,onUpdateEmail}){
   const isStarred =email.isStarred
@@ -12,7 +14,7 @@ export function EmailStarred({email,onUpdateEmail}){
     return (
         <div className={`star ${isStarred ? 'isstarred' : 'notstarred'}`} onClick={onStarClick}>
           {isStarred ?
-          (<img src ={fullStar} alt="Starred"/>) : (<img src ={emptyStar} alt="Not Starred"/>)}
+          (<StarIcon alt="Starred" style={{color:yellow[500]}}/>) : (<StarOutlineOutlinedIcon alt="Not Starred"/>)}
         </div>
       )
 }

@@ -1,7 +1,15 @@
 // import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router";
+
+import { utilService } from "../services/util.service";
+
 import { EmailStarred } from "./EmailStarred";
+import { EmailRead } from "./EmailRead";
 import "../assets/css/cmps/EmailPreview.css"
+
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
+
 
 export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
     const navigate = useNavigate()
@@ -27,6 +35,7 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         }
         else {
             const newEmail = { ...email, removedAt: Date.now() }
+            debugger
             onUpdateEmail(newEmail)
         }
     }
@@ -41,12 +50,14 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
             <div className="email-from">{email.from}</div>
             <div className="email-subject">{email.subject}</div>
             <div className="email-body">{email.body}</div>
-            <div className="email-button email-archive-button">Archive</div>
+            <div className="email-button email-archive-button"><ArchiveOutlinedIcon /></div>
             <div onClick={deleteEmailClick}
-             className="email-button email-delete-button">Delete</div>
-            <div onClick={toggleReadClick}
-             className={`email-button email-mark-read-status-button email-mark-${email.isRead ? "unread" : "read"}`}>{`Mark as ${email.isRead ? "unread" : "read"}`}</div>
-            <div className="email-sent-date">{email.sentAt}</div>
+                className="email-button email-delete-button"><DeleteOutlineIcon /></div>
+            <EmailRead className="email-button"
+                email={email}
+                onUpdateEmail={onUpdateEmail}
+            />
+            <div className="email-sent-date">{utilService.formatDate(email.sentAt)}</div>
         </article>
     )
 }

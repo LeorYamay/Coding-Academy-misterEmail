@@ -35,13 +35,17 @@ export function EmailIndex() {
         }
     }
 
-    async function onUpdateEmail(email) {
+    async function onUpdateEmail(email,filterBy) {
         try {
             const updatedEmail = await emailService.save(email)
-            setEmails(prevEmails => prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail))
+            setEmails(prevEmails =>
+                 emailService.filter(prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)),filterBy)
         } catch (err) {
             console.log('Error in onUpdateEmail', err)
         }
+    }
+    const onUpdateEmailAndFilter=(email)=>{
+        onUpdateEmail(email,filterBy)
     }
 
     // console.log('emails' , emails)
@@ -50,7 +54,7 @@ export function EmailIndex() {
         <EmailList
             emails={emails}
             onRemoveEmail={onRemoveEmail}
-            onUpdateEmail={onUpdateEmail} />
+            onUpdateEmail={onUpdateEmailAndFilter} />
 
     </section>
 }

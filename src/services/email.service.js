@@ -7,31 +7,37 @@ export const emailService = {
     remove,
     getById,
     createEmail,
-    getDefaultFilter
-
+    getDefaultFilter,
+    filter,
+    getLoggedInUser
 }
 
 const STORAGE_KEY = 'emails'
 
+const loggedinUser = { email: 'user@appsus.com', fullname: 'Mahatma Appsus' }
+function getLoggedInUser(){
+    return loggedinUser
+}
 _createEmails()
 
 async function query(filterBy) {
     const emails = await storageService.query(STORAGE_KEY);
+    return await filter(emails, filterBy)
+}
+
+function filter(emails, filterBy) {
     if (filterBy) {
         const { subject, body, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to } = filterBy;
-
-        return await emails.filter((email) => {
-            const isSubjectMatch = subject ? email.subject.toLowerCase().includes(subject.toLowerCase()) : true
-            const isBodyMatch = body ? email.body.toLowerCase().includes(body.toLowerCase()) : true
-            const isReadMatch = !(isRead == null) ? email.isRead === isRead : true
-            const isStarredMatch = !(isStarred == null) ? email.isStarred === isStarred : true
-            const isSentBefore = sentBefore ? sentBefore < email.sentAt : true
-            const isSentAfter = sentAfter ? sentAfter > email.sentAt : true
-
-            const isInTrashMatch = (inTrash == null) || (!inTrash ? !(email.removedAt) : (email.removedAt))
-
-            const isFromMatch = from ? email.from.toLowerCase() === from.toLowerCase() : true
-            const isToMatch = to ? email.to.toLowerCase() === to.toLowerCase() : true
+        emails.filter((email) => {
+            const isSubjectMatch = subject ? compareStringsIgnoreCase(email.subject, subject) : true;
+            const isBodyMatch = body ? email.body.toLowerCase().includes(body.toLowerCase()) : true;
+            const isReadMatch = !(isRead == null) ? email.isRead === isRead : true;
+            const isStarredMatch = !(isStarred == null) ? email.isStarred === isStarred : true;
+            const isSentBefore = sentBefore ? sentBefore < email.sentAt : true;
+            const isSentAfter = sentAfter ? sentAfter > email.sentAt : true;
+            const isInTrashMatch = (inTrash == null) || (!inTrash ? !(email.removedAt) : (email.removedAt));
+            const isFromMatch = from ? compareStringsIgnoreCase(email.from, from) : true;
+            const isToMatch = to ? compareStringsIgnoreCase(email.to, to) : true;
 
             const fitlerRes = isSubjectMatch &&
                 isBodyMatch &&
@@ -94,16 +100,24 @@ function _createEmails() {
     }
 
     function _createRandomEmail() {
-        return {
+        const isFromLoggedInUser = _getRandomBoolean()
+        const email = {
             id: utilService.makeId(),
             subject: _generateRandomSubject(),
             body: _generateRandomBody(),
             isRead: _getRandomBoolean(),
             isStarred: _getRandomBoolean(),
-            from: _generateRandomEmail(),
-            to: _generateRandomEmail(),
             sentAt: _getRandomDateInPast()
         }
+        if (isFromLoggedInUser) {
+            email.from = loggedinUser.email
+            email.to = _generateRandomEmail()
+        }
+        else {
+            email.to = loggedinUser.email
+            email.from = _generateRandomEmail()
+        }
+        return email
     }
 }
 
@@ -119,34 +133,40 @@ function _generateRandomSubject() {
         'Action Required',
     ];
 
-    const randomIndex = Math.floor(Math.random() * subjects.length);
-    return subjects[randomIndex];
+    const randomIndex = Math.floor(Math.random() * subjects.length)
+    return subjects[randomIndex]
 }
 
 
 function _generateRandomBody() {
-    const greetings = ['Dear', 'Hello', 'Hi', 'Greetings'];
-    const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+    const greetings = ['Dear', 'Hello', 'Hi', 'Greetings']
+    const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
 
-    const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+    const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)]
     const randomBody = `${randomGreeting},
   
   ${loremIpsum}
   
   Sincerely,
-  Your Name`;
+  Your Name`
 
-    return randomBody;
+    return randomBody
 }
 
 function _generateRandomEmail() {
-    const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'example.com', 'testmail.com'];
-    const usernameLength = Math.floor(Math.random() * 10) + 5; // Random username length between 5 and 14 characters
+    const isFromLoggedInUser = _getRandomBoolean(0.25)
+    if (isUser) {
+        return loggedinUser.email
+    } else {
+        const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'example.com', 'testmail.com']
+        const usernameLength = Math.floor(Math.random() * 10) + 5
 
-    const username = _generateRandomString(usernameLength);
-    const domain = domains[Math.floor(Math.random() * domains.length)];
+        const username = _generateRandomString(usernameLength);
+        const domain = domains[Math.floor(Math.random() * domains.length)]
 
-    return `${username}@${domain}`;
+        return `${username}@${domain}`
+
+    }
 }
 
 function _generateRandomString(length) {
@@ -161,8 +181,8 @@ function _generateRandomString(length) {
     return randomString;
 }
 
-function _getRandomBoolean() {
-    return Math.random() < 0.5; // Will return true approximately 50% of the time
+function _getRandomBoolean(rate = 0.5) {
+    return Math.random() < rate
 }
 
 function _getRandomDateInPast() {

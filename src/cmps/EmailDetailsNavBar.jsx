@@ -1,10 +1,23 @@
+
 import { Link } from "react-router-dom";
 
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ReportIcon from '@mui/icons-material/Report';
+import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 
-export function EmailDetailNavBar(){
-   return <nav className="email-details-navbar">
-        <Link to="/email">Back</Link>
-        <div>Mark As UnRead</div>
-        <div>Delete</div>
+import { EmailRead } from "./EmailRead";
+
+export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
+    return <nav className="email-details-navbar">
+        <Link to="/email"><ArrowBackIcon /></Link>
+        <ArchiveOutlinedIcon/>
+        <ReportIcon/>
+        <div><DeleteOutlineIcon /></div>
+        |
+        <EmailRead
+            email={email}
+            onUpdateEmail ={onUpdateEmail}
+        />
     </nav>
 }

@@ -37,3 +37,16 @@
 .email-preview:hover .email-sent-date{
     display: none;
 }
+
+
+
+.email-button:hover{
+    content: attr(alt);
+    background-color:  darkgray;
+    /* color: transparent; */
+    padding: 5px;
+    border-radius: 60px;
+    /* border: 2px solid black; */
+    /* display: block; */
+    cursor: pointer;
+}
