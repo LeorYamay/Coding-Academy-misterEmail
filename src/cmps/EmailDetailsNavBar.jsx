@@ -10,7 +10,7 @@ import { EmailRead } from "./EmailRead";
 
 export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
     return <nav className="email-details-navbar">
-        <Link to="/email"><ArrowBackIcon /></Link>
+        <Link to="/"><ArrowBackIcon /></Link>
         <ArchiveOutlinedIcon/>
         <ReportIcon/>
         <div><DeleteOutlineIcon /></div>
