@@ -1,4 +1,18 @@
 .search-bar{
+    display: flex;
+    align-content: center;
+}
+
+.email-filter{
     grid-row: 1/span 1;
     grid-column: 2/span 1;
+    align-content: center;
+}
+
+.filter-form {
+    display: block;
+    z-index: 999;
+    position: relative;
+    background-color: white; /* Set white background color */
+    border: 1px solid black; /* Add a thin black border */
 }

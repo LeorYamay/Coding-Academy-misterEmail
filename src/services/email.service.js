@@ -9,7 +9,8 @@ export const emailService = {
     createEmail,
     getDefaultFilter,
     filter,
-    getLoggedInUser
+    getLoggedInUser,
+    getFilterFromParams
 }
 
 const STORAGE_KEY = 'emails'
@@ -63,6 +64,15 @@ function filter(emails, filterBy) {
     return emails;
 }
 
+function getFilterFromParams(searchParams) {
+    const paramsArray = Array.from(searchParams.entries())
+    const filterBy = {}
+    for (const [key, value] of paramsArray) {
+        filterBy[key] = value;
+    }
+    return filterBy
+}
+
 function getDefaultFilter() {
     return {
         inTrash: false
@@ -96,6 +106,7 @@ function createEmail({ subject = '', body = '', isRead = false, isStarred = fals
         to
     }
 }
+
 
 function _createEmails() {
     let emails = utilService.loadFromStorage(STORAGE_KEY)

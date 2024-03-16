@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 
 import { emailService } from "../services/email.service"
 
@@ -14,6 +14,12 @@ export function EmailIndex() {
     const [emails, setEmails] = useState(null)
     const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter())
     const params = useParams()
+    const [searchParams, setSearchParams] = useSearchParams()
+    
+    useEffect(() => {
+        setFilterBy(emailService.getFilterFromParams(searchParams))
+    }, [searchParams])
+
     useEffect(() => {
         loadEmails()
     }, [filterBy])
