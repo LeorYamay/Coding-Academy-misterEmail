@@ -5,8 +5,8 @@ import { emailService } from "../services/email.service"
 
 import { EmailList } from "../cmps/EmailList.jsx"
 import { EmailPreview } from "../cmps/EmailPreview.jsx"
-import { NavBar } from "../cmps/NavBar.jsx"
-import { SearchBar } from '../cmps/SearchBar.jsx'
+
+
 
 
 
@@ -53,17 +53,9 @@ export function EmailIndex() {
         onUpdateEmail(email)
     }
 
-    // console.log('emails' , emails)
     if (!emails) return <div>Loading...</div>
     return (
         <section className="email-index">
-            <SearchBar 
-                filterBy ={filterBy}    
-                onSetFilter ={onSetFilter}
-            />
-            <NavBar
-            onSetFilter ={onSetFilter}
-            />
             <EmailList
                     emails={emails}
                     onRemoveEmail={onRemoveEmail}

@@ -1,7 +1,4 @@
-
-
 .email-list{
     list-style-type: none;
-    grid-column: 2 /span 1;
-    grid-row: 2 / span 1;
+    padding-inline-start: 0;
 }

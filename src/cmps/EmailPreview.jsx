@@ -23,7 +23,8 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
             const newEmail = { ...email, isRead: true }
             onUpdateEmail(newEmail)
         }
-        navigate(`/${email.id}`)
+        const currentPathname = location.pathname
+        navigate(`/${params.folderId}/${email.id}`)
     }
 
     function toggleReadClick(event) {

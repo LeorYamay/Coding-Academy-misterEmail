@@ -1,39 +1,53 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { Mail } from "@mui/icons-material";
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 
-export function SearchBar({ filterby, onSetFilter }) {
-    const [searchText, setSearchText] = useState("")
-    const [tempFilter, setTempFilter] = useState(filterby)
+export function SearchBar() {
+    const [tempFilter, setTempFilter] = useState("")
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const handleKeyDown = (event) => {
-        console.log("event.key", event.key)
         if (event.key === 'Enter') {
-            console.log(searchText)
-            setTempFilter(prevFilterBy => ({ ...prevFilterBy, hasText: searchText }))
-            onSetFilter({hasText: searchText})
+            const tempParams = new URLSearchParams();
+            Object.entries(tempFilter).forEach(([key, value]) => {
+                if (value.toString().trim() !== '') {
+                    tempParams.append(key, value);
+                }
+            })
+            setSearchParams(tempParams)
         }
     }
 
-
+    const updateTempFilter = (fieldsToUpdate) => {
+        setTempFilter(prevTempFilter => ({ ...prevTempFilter, ...fieldsToUpdate }))
+    }
+    
+    const setSearchText = (text) => {
+        setTempFilter(prevFilterBy => ({ ...prevFilterBy, hasText: text }))
+    }
     return (
         <div className="search-bar">
             <SearchIcon />
             <input
                 type="text"
-                value={searchText}
+                value={[tempFilter.hasText]}
                 onChange={(e) => setSearchText(e.target.value)}
                 placeholder="Search Mail"
                 onKeyDown={handleKeyDown}
             />
             <TuneIcon />
+            {/* <FilterForm
+                updateTempFilter={updateTempFilter}
+            /> */}
         </div>
     )
 }
 
-export function FilterForm({ filterby, setFilterBy }) {
-    const [filterData, setFilterData] = useState(filterby)
+export function FilterForm({ updateTempFilter, tempFilter }) {
+    const [filterData, setFilterData] = useState(tempFilter)
 
     const handleChange = (e) => {
         const { name, value } = e.target;

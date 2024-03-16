@@ -1,5 +1,4 @@
 .email-index{
     display: grid;
-    grid-template-columns:auto 1fr ;
-    grid-template-rows: 50px 1fr;
+    padding-inline-start: 0;
 }

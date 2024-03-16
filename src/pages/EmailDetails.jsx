@@ -30,12 +30,13 @@ export function EmailDetails() {
             const email = await emailService.getById(params.emailId)
             setEmail(email)
         } catch (err) {
-            navigate('/email')
+            const folder = `/${params.folderId}`
+            navigate(folder)
             console.log('Error in loadEmail', err)
         }
     }
     if (!email) return <div>Loading...</div>
-    
+    console.log(params)
     return (
         <section className="email-details">
             <EmailDetailNavBar
