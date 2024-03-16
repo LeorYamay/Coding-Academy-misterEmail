@@ -1,6 +1,15 @@
-.side-bar{
+.nav-bar{
     grid-column: 1 /span 1;
     grid-row: 1 / span 2;
     border: solid thin black;
     align-content: space-between;
+}
+
+.nav-bar-logo-toggle{
+    display: flex;
+}
+
+
+.nav-bar > *{
+    align-items: center;
 }

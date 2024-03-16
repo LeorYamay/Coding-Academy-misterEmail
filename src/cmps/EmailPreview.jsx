@@ -5,21 +5,25 @@ import { utilService } from "../services/util.service";
 
 import { EmailStarred } from "./EmailStarred";
 import { EmailRead } from "./EmailRead";
-import "../assets/css/cmps/EmailPreview.css"
+import "../assets/css/cmps/EmailPreview.css";
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 
 
 export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
     const navigate = useNavigate()
+    const params = useParams()
 
     function onPreviewClick() {
         if (!email.isRead){
             const newEmail = { ...email, isRead: true }
             onUpdateEmail(newEmail)
         }
-        navigate(`/email/${email.id}`)
+        navigate(`/${email.id}`)
     }
 
     function toggleReadClick(event) {
@@ -40,9 +44,12 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         }
     }
 
+    const emailClass = `email-preview ${email.isRead ? 'email-read' : 'email-notread'}`;
+
     return (
 
-        <article className={`email-preview ${email.isRead ? 'email-read' : 'email-notread'}`} onClick={onPreviewClick}>
+        <article className={emailClass} onClick={onPreviewClick}>
+            <CheckBoxOutlineBlankOutlinedIcon/>
             <EmailStarred
                 email={email}
                 onUpdateEmail={onUpdateEmail}

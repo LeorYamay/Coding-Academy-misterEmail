@@ -26,18 +26,25 @@ async function query(filterBy) {
 }
 
 function filter(emails, filterBy) {
+    
     if (filterBy) {
-        const { subject, body, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to } = filterBy;
-        emails.filter((email) => {
-            const isSubjectMatch = subject ? compareStringsIgnoreCase(email.subject, subject) : true;
-            const isBodyMatch = body ? email.body.toLowerCase().includes(body.toLowerCase()) : true;
+        const { subject, body, hasText, doesNotHaveText, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to } = filterBy;
+        return emails.filter((email) => {
+            const isSubjectMatch = subject ? utilService.stringContainsIgnoreCase(email.subject, subject) : true;
+            const isBodyMatch = body ? utilService.stringContainsIgnoreCase(email.body,body) : true;
             const isReadMatch = !(isRead == null) ? email.isRead === isRead : true;
             const isStarredMatch = !(isStarred == null) ? email.isStarred === isStarred : true;
             const isSentBefore = sentBefore ? sentBefore < email.sentAt : true;
             const isSentAfter = sentAfter ? sentAfter > email.sentAt : true;
             const isInTrashMatch = (inTrash == null) || (!inTrash ? !(email.removedAt) : (email.removedAt));
-            const isFromMatch = from ? compareStringsIgnoreCase(email.from, from) : true;
-            const isToMatch = to ? compareStringsIgnoreCase(email.to, to) : true;
+            const isFromMatch = from ? utilService.stringContainsIgnoreCase(email.from, from) : true;
+            const isToMatch = to ? utilService.stringContainsIgnoreCase(email.to, to) : true;
+            const isTextMatch = hasText ?
+                [email.subject, email.body, email.from, email.to].some(prop => utilService.stringContainsIgnoreCase(prop, hasText))
+                : true
+            const isTextExcludeMatch = doesNotHaveText ?
+                !([email.subject, email.body, email.from, email.to].some(prop => utilService.stringContainsIgnoreCase(prop, doesNotHaveText)))
+                : true
 
             const fitlerRes = isSubjectMatch &&
                 isBodyMatch &&
@@ -47,7 +54,9 @@ function filter(emails, filterBy) {
                 isSentAfter &&
                 isInTrashMatch &&
                 isFromMatch &&
-                isToMatch
+                isToMatch &&
+                isTextMatch &&
+                isTextExcludeMatch
             return fitlerRes
         })
     }

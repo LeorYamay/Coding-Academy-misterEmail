@@ -4,7 +4,8 @@ export const utilService = {
     saveToStorage,
     loadFromStorage,
     compareStringsIgnoreCase,
-    formatDate
+    formatDate,
+    stringContainsIgnoreCase
 }
 
 function makeId(length = 5) {
@@ -29,7 +30,10 @@ function compareStringsIgnoreCase(string1, string2) {
     const regex = new RegExp(`^${string1}$`, 'i');
     return regex.test(string2);
 }
-
+function stringContainsIgnoreCase(mainString, subString) {
+    const regex = new RegExp(subString, 'i');
+    return regex.test(mainString);
+}
 function formatDate(unformattedDate) {
     const date = new Date(unformattedDate);
     const today = new Date();

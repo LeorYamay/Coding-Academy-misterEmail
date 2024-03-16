@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react"
-import { emailService } from "../services/email.service"
-import { EmailList } from "../cmps/EmailList.jsx"
+import { useParams } from "react-router-dom"
 
+import { emailService } from "../services/email.service"
+
+import { EmailList } from "../cmps/EmailList.jsx"
+import { EmailPreview } from "../cmps/EmailPreview.jsx"
+import { NavBar } from "../cmps/NavBar.jsx"
+import { SearchBar } from '../cmps/SearchBar.jsx'
 
 
 
 export function EmailIndex() {
     const [emails, setEmails] = useState(null)
     const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter())
-
+    const params = useParams()
     useEffect(() => {
         loadEmails()
     }, [filterBy])
@@ -35,26 +40,35 @@ export function EmailIndex() {
         }
     }
 
-    async function onUpdateEmail(email,filterBy) {
+    async function onUpdateEmail(email) {
         try {
             const updatedEmail = await emailService.save(email)
             setEmails(prevEmails =>
-                 emailService.filter(prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)),filterBy)
+                emailService.filter(prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)), filterBy)
         } catch (err) {
             console.log('Error in onUpdateEmail', err)
         }
     }
-    const onUpdateEmailAndFilter=(email)=>{
-        onUpdateEmail(email,filterBy)
+    const onUpdateEmailAndFilter = async (email) => {
+        onUpdateEmail(email)
     }
 
     // console.log('emails' , emails)
     if (!emails) return <div>Loading...</div>
-    return <section className="email-index">
-        <EmailList
-            emails={emails}
-            onRemoveEmail={onRemoveEmail}
-            onUpdateEmail={onUpdateEmailAndFilter} />
-
-    </section>
+    return (
+        <section className="email-index">
+            <SearchBar 
+                filterBy ={filterBy}    
+                onSetFilter ={onSetFilter}
+            />
+            <NavBar
+            onSetFilter ={onSetFilter}
+            />
+            <EmailList
+                    emails={emails}
+                    onRemoveEmail={onRemoveEmail}
+                    onUpdateEmail={onUpdateEmailAndFilter}
+                />
+        </section>
+    )
 }
