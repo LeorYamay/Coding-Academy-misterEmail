@@ -8,6 +8,7 @@ import { EmailDetails } from './pages/EmailDetails.jsx'
 import { EmailList } from './cmps/EmailList.jsx'
 import { SearchBar } from './cmps/SearchBar.jsx'
 import { NavBar } from "./cmps/NavBar.jsx"
+import { EmailCompose } from './cmps/EmailCompose.jsx'
 
 
 
@@ -26,6 +27,7 @@ export function App() {
           </Routes>
         </main>
       </section>
+      <EmailCompose/>
     </Router>
   )
 }
