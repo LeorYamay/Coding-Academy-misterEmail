@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { emailService } from "../services/email.service";
+
 import { Mail } from "@mui/icons-material";
 import SearchIcon from '@mui/icons-material/Search';
 import TuneIcon from '@mui/icons-material/Tune';
 
 export function SearchBar() {
-    const [tempFilter, setTempFilter] = useState("")
+    const [tempFilter, setTempFilter] = useState({})
     const [searchParams, setSearchParams] = useSearchParams()
-    const [hiddenFilter, setHideFilter] = useState("true")
+    const [hiddenFilter, setHideFilter] = useState(true)
+
+
+    useEffect(() => {
+        setTempFilter(emailService.getFilterFromParams(searchParams))
+    }, [])
 
     useEffect(() => {
         // todo change to searchText
@@ -38,6 +45,10 @@ export function SearchBar() {
         setTempFilter(prevFilterBy => ({ ...prevFilterBy, hasText: text }))
     }
 
+    const hideFilter = () =>{
+        setHideFilter(true)
+    }
+
     return (
         <div className="email-filter">
             <div className="search-bar">
@@ -56,36 +67,40 @@ export function SearchBar() {
                     (<FilterForm
                         updateTempFilter={updateTempFilter}
                         tempFilter={tempFilter}
+                        updateSearchParams={updateSearchParams}
+                        hideFilter={hideFilter}
                     />)}
         </div>
     )
 }
 
-export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams }) {
-    const [filterData, setFilterData] = useState({})
-
+export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams, hideFilter }) {
+    // const [filterData, setFilterData] = useState({})
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFilterData({ ...filterData, [name]: value });
-    };
+        updateTempFilter({[name]: value})
+        // setFilterData({ ...filterData, [name]: value })
+    }
 
-    useEffect(() => {
-        setFilterData({ ...tempFilter })
-    }, [tempFilter])
+    // useEffect(() => {
+    //     setFilterData({ ...tempFilter })
+    // }, [tempFilter])
 
     const handleSubmit = (e) => {
-        e.preventDefault();
-        updateTempFilter(filterData);
-        updateSearchParams();
-    };
+        e.preventDefault()
+        // updateTempFilter(filterData)
+        updateSearchParams()
+        hideFilter()
+    }
+
     return (
-        <form className={'filter-form'}>
+        <form className={'filter-form'} onSubmit={handleSubmit}>
             <label>
                 From:
                 <input
                     type="text"
                     name="from"
-                    value={[filterData.from]}
+                    value={[tempFilter.from]}
                     onChange={handleChange}
                 />
             </label>
@@ -95,7 +110,7 @@ export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams })
                 <input
                     type="text"
                     name="to"
-                    value={[filterData.to]}
+                    value={[tempFilter.to]}
                     onChange={handleChange}
                 />
             </label>
@@ -105,7 +120,7 @@ export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams })
                 <input
                     type="text"
                     name="subject"
-                    value={[filterData.subject]}
+                    value={[tempFilter.subject]}
                     onChange={handleChange}
                 />
             </label>
@@ -115,7 +130,7 @@ export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams })
                 <input
                     type="text"
                     name="hasText"
-                    value={[filterData.hasText]}
+                    value={[tempFilter.hasText]}
                     onChange={handleChange}
                 />
             </label>
@@ -125,12 +140,12 @@ export function FilterForm({ updateTempFilter, tempFilter, updateSearchParams })
                 <input
                     type="text"
                     name="doesntHave"
-                    value={[filterData.doesntHave]}
+                    value={[tempFilter.doesntHave]}
                     onChange={handleChange}
                 />
             </label>
             <br />
-            <button type="submit">Search</button>
+            <button type="submit" >Search</button>
         </form>
     )
 }
