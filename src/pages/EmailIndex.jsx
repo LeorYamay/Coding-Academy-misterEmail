@@ -56,7 +56,7 @@ export function EmailIndex() {
             console.log('filterBy ', filterBy)
             const updatedEmail = await emailService.save(email)
             setEmails(prevEmails =>
-                emailService.filter(prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)), filterBy)
+                emailService.filter((prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)), filterBy))
         } catch (err) {
             console.log('Error in onUpdateEmail', err)
         }
