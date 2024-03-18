@@ -14,7 +14,7 @@ export function SearchBar() {
 
 
     useEffect(() => {
-        setTempFilter(emailService.getFilterFromParams(searchParams))
+        setTempFilter(emailService.getFilterFromSearchParams(searchParams))
     }, [])
 
     useEffect(() => {

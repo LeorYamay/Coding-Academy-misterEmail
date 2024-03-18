@@ -44,13 +44,11 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         }
     }
     const onToggleStar = ()=>{
-        onUpdateEmail({...email,isStarred: !isStarred})
-        onUpdateEmail(email)
+        onUpdateEmail({...email,isStarred: !email.isStarred})
     }
 
     const onToggleRead = ()=>{
-        onUpdateEmail({...email,isRead: !isRead})
-        onUpdateEmail(email)
+        onUpdateEmail({...email,isRead: !(email.isRead)})
     }
     const emailClass = `email-preview ${email.isRead ? 'email-read' : 'email-notread'}`;
 

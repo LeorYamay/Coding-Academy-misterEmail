@@ -22,7 +22,6 @@ export function EmailCompose() {
             saveTimeoutRef.current = setTimeout(async () => {
                 try {
                     const savedEmail = await emailService.save(email)
-                    console.log("saving")
                     setEmail(savedEmail)
                     if ((!email.id) && (compose === 'new')) {
                         updateSearchParamsComposeWithId(savedEmail.id)

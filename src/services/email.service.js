@@ -10,7 +10,8 @@ export const emailService = {
     getDefaultFilter,
     filter,
     getLoggedInUser,
-    getFilterFromParams
+    getFilterFromSearchParams,
+    getFilterFromFolder
 }
 
 const STORAGE_KEY = 'emails'
@@ -29,14 +30,15 @@ async function query(filterBy) {
 function filter(emails, filterBy) {
     
     if (filterBy) {
-        const { subject, body, hasText, doesNotHaveText, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to } = filterBy;
+        const { subject, body, hasText, doesNotHaveText, isRead, isStarred, sentBefore, sentAfter, inTrash, from, to, isDraft } = filterBy
         return emails.filter((email) => {
-            const isSubjectMatch = subject ? utilService.stringContainsIgnoreCase(email.subject, subject) : true;
-            const isBodyMatch = body ? utilService.stringContainsIgnoreCase(email.body,body) : true;
-            const isReadMatch = !(isRead == null) ? email.isRead === isRead : true;
+            const isSubjectMatch = subject ? utilService.stringContainsIgnoreCase(email.subject, subject) : true
+            const isBodyMatch = body ? utilService.stringContainsIgnoreCase(email.body,body) : true
+            const isReadMatch = !(isRead == null) ? email.isRead === isRead : true
             const isStarredMatch = !(isStarred == null) ? email.isStarred === isStarred : true;
             const isSentBefore = sentBefore ? sentBefore < email.sentAt : true;
             const isSentAfter = sentAfter ? sentAfter > email.sentAt : true;
+            const isDraft = !email.sentAt
             const isInTrashMatch = (inTrash == null) || (!inTrash ? !(email.removedAt) : (email.removedAt));
             const isFromMatch = from ? utilService.stringContainsIgnoreCase(email.from, from) : true;
             const isToMatch = to ? utilService.stringContainsIgnoreCase(email.to, to) : true;
@@ -64,13 +66,27 @@ function filter(emails, filterBy) {
     return emails;
 }
 
-function getFilterFromParams(searchParams) {
+function getFilterFromSearchParams(searchParams) {
     const paramsArray = Array.from(searchParams.entries())
     const filterBy = {}
     for (const [key, value] of paramsArray) {
         filterBy[key] = value;
     }
     return filterBy
+}
+
+function getFilterFromFolder(folder){
+    switch (folder){
+        case 'inbox':
+            return {to:getLoggedInUser.email}
+            break
+        case 'starred':
+            return {isStarred:true}
+            break
+        case 'sent':
+            return {from:getLoggedInUser.email}
+            break
+    }
 }
 
 function getDefaultFilter() {

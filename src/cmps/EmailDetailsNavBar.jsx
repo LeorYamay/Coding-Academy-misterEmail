@@ -13,7 +13,7 @@ export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
     const folder = `/${params.folderId}`
 
     const onToggleRead = ()=>{        
-        onUpdateEmail({...email,isRead: !isRead})
+        onUpdateEmail({...email,isRead: !email.isRead})
     }
 
     return <nav className="email-details-navbar">
