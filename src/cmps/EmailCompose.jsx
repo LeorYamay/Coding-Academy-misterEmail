@@ -15,7 +15,6 @@ export function EmailCompose() {
     const saveTimeoutRef = useRef();
 
     let compose = searchParams.get('compose')
-
     useEffect(() => {
         compose = searchParams.get('compose')
         async function saveEmailWithDelay() {
@@ -94,10 +93,8 @@ export function EmailCompose() {
         })
         const newParams = new URLSearchParams()
         setSearchParams(newParams)
-        // setEmail((prevEmail) => ({
-        //     ...prevEmail,
-        //     sentAt: new Date()
-        // }))
+        loadedEmail.current = false
+        setEmail({})
     }
 
     return (compose && (
@@ -140,3 +137,11 @@ export function EmailCompose() {
 
     )
 }
+
+export function EmailComposeWrapper(){
+    const [searchParams] = useSearchParams();
+    const compose = searchParams.get('compose')
+  
+    return compose ? <EmailCompose /> : null
+  };
+  

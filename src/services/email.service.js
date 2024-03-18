@@ -19,7 +19,7 @@ const loggedinUser = { email: 'user@appsus.com', fullname: 'Mahatma Appsus' }
 function getLoggedInUser(){
     return loggedinUser
 }
-// _createEmails()
+_createEmails()
 
 async function query(filterBy) {
     const emails = await storageService.query(STORAGE_KEY);
