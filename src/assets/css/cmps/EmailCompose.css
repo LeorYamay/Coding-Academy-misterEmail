@@ -1,0 +1,14 @@
+.email-compose-container{
+    position: fixed;
+    bottom: 20px; /* Adjust this value to change the distance from the bottom */
+    right: 20px; /* Adjust this value to change the distance from the right */
+    background-color: white;
+    z-index: 9999; /* Ensure it appears above other content */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a box shadow for a nice effect */
+}
+
+.email-compose-form{
+    
+}

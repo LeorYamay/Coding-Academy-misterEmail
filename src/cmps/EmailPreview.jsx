@@ -40,7 +40,6 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         }
         else {
             const newEmail = { ...email, removedAt: Date.now() }
-            debugger
             onUpdateEmail(newEmail)
         }
     }

@@ -37,7 +37,9 @@ function stringContainsIgnoreCase(mainString, subString) {
 function formatDate(unformattedDate) {
     const date = new Date(unformattedDate);
     const today = new Date();
-
+    if (!unformattedDate){
+        return ''
+    }
     if (date.toDateString() === today.toDateString()) {
         // If the date is today, display the time
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -46,9 +48,9 @@ function formatDate(unformattedDate) {
         return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
     } else {
         // If the date is older than this year, display in dd/mm/yy format
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = String(date.getFullYear()).slice(-2);
-        return `${day}/${month}/${year}`;
+        const day = String(date.getDate()).padStart(2, '0')
+        const month = String(date.getMonth() + 1).padStart(2, '0')
+        const year = String(date.getFullYear()).slice(-2)
+        return `${day}/${month}/${year}`
     }
 }

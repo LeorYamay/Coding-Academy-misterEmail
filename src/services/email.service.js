@@ -19,7 +19,7 @@ const loggedinUser = { email: 'user@appsus.com', fullname: 'Mahatma Appsus' }
 function getLoggedInUser(){
     return loggedinUser
 }
-_createEmails()
+// _createEmails()
 
 async function query(filterBy) {
     const emails = await storageService.query(STORAGE_KEY);
@@ -94,7 +94,7 @@ function save(emailToSave) {
     }
 }
 
-function createEmail({ subject = '', body = '', isRead = false, isStarred = false, sentAt = new Date(), removedAt = null, from = '', to = '' }) {
+function createEmail({ subject = '', body = '', isRead = false, isStarred = false, sentAt = null, removedAt = null, from = '', to = '' }) {
     return {
         subject,
         body,
@@ -175,7 +175,7 @@ function _generateRandomBody() {
 
 function _generateRandomEmail() {
     const isFromLoggedInUser = _getRandomBoolean(0.25)
-    if (isUser) {
+    if (isFromLoggedInUser) {
         return loggedinUser.email
     } else {
         const domains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'example.com', 'testmail.com']

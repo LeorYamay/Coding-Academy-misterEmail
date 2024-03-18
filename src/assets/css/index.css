@@ -10,4 +10,5 @@
 @import "./cmps/EmailStarred.css";
 @import "./cmps/NavBar.css";
 @import "./cmps/SearchBar.css";
-@import "./cmps/EmailDetailsNavBar.css"
+@import "./cmps/EmailDetailsNavBar.css";
+@import "./cmps/EmailCompose.css";
