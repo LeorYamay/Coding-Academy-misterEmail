@@ -38,7 +38,7 @@ function formatDate(unformattedDate) {
     const date = new Date(unformattedDate);
     const today = new Date();
     if (!unformattedDate){
-        return ''
+        return 'draft'
     }
     if (date.toDateString() === today.toDateString()) {
         // If the date is today, display the time

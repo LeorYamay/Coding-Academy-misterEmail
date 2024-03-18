@@ -14,18 +14,19 @@ export function EmailCompose() {
     const loadedEmail = useRef(false)
     const saveTimeoutRef = useRef();
 
-    useEffect(() => {
-        const compose = searchParams.get('compose')
+    let compose = searchParams.get('compose')
 
+    useEffect(() => {
+        compose = searchParams.get('compose')
         async function saveEmailWithDelay() {
             // Set a timeout to save the email after 3 seconds
             saveTimeoutRef.current = setTimeout(async () => {
                 try {
-                    console.log(email.id,compose)
                     const savedEmail = await emailService.save(email)
+                    console.log("saving")
                     setEmail(savedEmail)
                     if ((!email.id) && (compose === 'new')) {
-                        updateSearchParamsComposeWithId(savedEmail)
+                        updateSearchParamsComposeWithId(savedEmail.id)
                     }
                 } catch (error) {
                     console.error("Error saving email:", error)
@@ -48,7 +49,6 @@ export function EmailCompose() {
                         throw ('Email already sent and cannot be edited')
                     }
                     setEmail(composeEmail)
-                    console.log("setComposeEmail", composeEmail)
                 }
                 catch (error) {
                     console.error('An error occured when trying to edit email', error)
@@ -66,10 +66,8 @@ export function EmailCompose() {
             }
             loadedEmail.current = true
         }
-
-        if (email && loadedEmail.current) {
+        if ((Object.keys(email).length>0) && loadedEmail.current) {
             // Call saveEmailWithDelay when email changes
-            console.log(email)
             clearTimeout(saveTimeoutRef.current)
             saveEmailWithDelay()
         }
@@ -90,13 +88,19 @@ export function EmailCompose() {
     }
 
     const handleSend = () => {
-        setEmail((prevEmail) => ({
-            ...prevEmail,
+        emailService.save({
+            ...email,
             sentAt: new Date()
-        }))
+        })
+        const newParams = new URLSearchParams()
+        setSearchParams(newParams)
+        // setEmail((prevEmail) => ({
+        //     ...prevEmail,
+        //     sentAt: new Date()
+        // }))
     }
 
-    return (
+    return (compose && (
         <div className="email-compose-container">
             <form className="email-compose-form">
                 <label htmlFor="to">To:</label>
@@ -132,6 +136,7 @@ export function EmailCompose() {
                 </button>
             </form>
         </div>
+    )
 
     )
 }
