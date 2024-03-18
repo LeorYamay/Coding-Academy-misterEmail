@@ -43,7 +43,15 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
             onUpdateEmail(newEmail)
         }
     }
+    const onToggleStar = ()=>{
+        onUpdateEmail({...email,isStarred: !isStarred})
+        onUpdateEmail(email)
+    }
 
+    const onToggleRead = ()=>{
+        onUpdateEmail({...email,isRead: !isRead})
+        onUpdateEmail(email)
+    }
     const emailClass = `email-preview ${email.isRead ? 'email-read' : 'email-notread'}`;
 
     return (
@@ -51,8 +59,8 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         <article className={emailClass} onClick={onPreviewClick}>
             <CheckBoxOutlineBlankOutlinedIcon/>
             <EmailStarred
-                email={email}
-                onUpdateEmail={onUpdateEmail}
+                isStarred={email.isStarred}
+                onToggleStar={onToggleStar}
             />
             <div className="email-from">{email.from}</div>
             <div className="email-subject">{email.subject}</div>
@@ -60,9 +68,9 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
             <div className="email-button email-archive-button"><ArchiveOutlinedIcon /></div>
             <div onClick={deleteEmailClick}
                 className="email-button email-delete-button"><DeleteOutlineIcon /></div>
-            <EmailRead className="email-button"
-                email={email}
-                onUpdateEmail={onUpdateEmail}
+            <EmailRead buttonType="email-button"
+                isRead={email.isRead}
+                onToggleRead={onToggleRead}
             />
             <div className="email-sent-date">{utilService.formatDate(email.sentAt)}</div>
         </article>

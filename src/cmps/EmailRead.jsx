@@ -2,17 +2,16 @@ import MarkEmailUnreadOutlinedIcon from '@mui/icons-material/MarkEmailUnreadOutl
 import DraftsOutlinedIcon from '@mui/icons-material/DraftsOutlined';
 
 
-export function EmailRead({className,email,onUpdateEmail}){
-  const isRead =email.isRead
-  function onReadClick(event)
-  {
+export function EmailRead({ buttonType, isRead, onToggleRead }) {
+  
+  function onReadClick(event) {
     event.stopPropagation()
-    const newEmail ={...email,isRead: !isRead}
-    onUpdateEmail(newEmail)
+    onToggleRead()
   }
-    return (
-        <div className={`${className} ${isRead ? 'isRead' : 'isNotRead'}`} onClick={onReadClick}>
-            {isRead?<MarkEmailUnreadOutlinedIcon/>:<DraftsOutlinedIcon/>}
-        </div>
-      )
+
+  return (
+    <div className={`${buttonType} ${isRead ? 'isRead' : 'isNotRead'}`} onClick={onReadClick}>
+      {isRead ? <MarkEmailUnreadOutlinedIcon /> : <DraftsOutlinedIcon />}
+    </div>
+  )
 }

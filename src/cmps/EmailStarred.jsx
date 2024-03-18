@@ -3,14 +3,13 @@ import StarOutlineOutlinedIcon from '@mui/icons-material/StarOutlineOutlined';
 import { yellow } from '@mui/material/colors';
 
 
-export function EmailStarred({email,onUpdateEmail}){
-  const isStarred =email.isStarred
+export function EmailStarred({isStarred,onToggleStar}){
   function onStarClick(event)
   {
     event.stopPropagation()
-    const newEmail ={...email,isStarred: !isStarred}
-    onUpdateEmail(newEmail)
+    onToggleStar()
   }
+  
     return (
         <div className={`star ${isStarred ? 'isstarred' : 'notstarred'}`} onClick={onStarClick}>
           {isStarred ?

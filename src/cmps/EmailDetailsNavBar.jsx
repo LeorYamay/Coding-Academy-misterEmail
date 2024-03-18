@@ -11,6 +11,11 @@ import { EmailRead } from "./EmailRead";
 export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
     const params = useParams()
     const folder = `/${params.folderId}`
+
+    const onToggleRead = ()=>{        
+        onUpdateEmail({...email,isRead: !isRead})
+    }
+
     return <nav className="email-details-navbar">
         <Link to={folder}><ArrowBackIcon /></Link>
         <ArchiveOutlinedIcon/>
@@ -18,8 +23,8 @@ export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
         <div><DeleteOutlineIcon /></div>
         |
         <EmailRead
-            email={email}
-            onUpdateEmail ={onUpdateEmail}
+            isRead={email.isRead}
+            onToggleRead ={onToggleRead}
         />
     </nav>
 }

@@ -13,7 +13,6 @@ export function EmailDetails() {
 
     useEffect(() => {
         loadEmail()
-
     }, [params.emailId])
 
     async function onUpdateEmail(email) {
@@ -36,7 +35,6 @@ export function EmailDetails() {
         }
     }
     if (!email) return <div>Loading...</div>
-    console.log(params)
     return (
         <section className="email-details">
             <EmailDetailNavBar
