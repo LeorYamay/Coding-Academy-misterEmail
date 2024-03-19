@@ -11,7 +11,8 @@ export const emailService = {
     filter,
     getLoggedInUser,
     getFilterFromSearchParams,
-    getFilterFromFolder
+    getFilterFromFolder,
+    updateSearchParamsComposeWithId
 }
 
 const STORAGE_KEY = 'emails'
@@ -73,6 +74,12 @@ function getFilterFromSearchParams(searchParams) {
         filterBy[key] = value;
     }
     return filterBy
+}
+
+function updateSearchParamsComposeWithId(id,searchParams,setSearchParams) {
+    const newParams = new URLSearchParams(searchParams)
+    newParams.set('compose', id)
+    setSearchParams(newParams)
 }
 
 function getFilterFromFolder(folder){

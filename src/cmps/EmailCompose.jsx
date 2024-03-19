@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react"
 
 import useEffectOnlyOnUpdate from "../hooks/useEffectOnUpdate"
 
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 export function EmailCompose() {
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -24,7 +26,7 @@ export function EmailCompose() {
                     const savedEmail = await emailService.save(email)
                     setEmail(savedEmail)
                     if ((!email.id) && (compose === 'new')) {
-                        updateSearchParamsComposeWithId(savedEmail.id)
+                        emailService.updateSearchParamsComposeWithId(email.id,searchParams,setSearchParams)
                     }
                 } catch (error) {
                     console.error("Error saving email:", error)
@@ -33,11 +35,7 @@ export function EmailCompose() {
 
         }
 
-        function updateSearchParamsComposeWithId(id) {
-            const newParams = new URLSearchParams(searchParams)
-            newParams.set('compose', id)
-            setSearchParams(newParams)
-        }
+       
 
         async function setComposeEmail() {
             if (email.id != compose) {
@@ -57,7 +55,7 @@ export function EmailCompose() {
         if (!loadedEmail.current) {
             if (compose === 'new') {
                 const composeTo = searchParams.get('composeTo')
-                setEmail(emailService.createEmail({ from: emailService.getLoggedInUser.email, to: composeTo }))
+                setEmail(emailService.createEmail({ from: emailService.getLoggedInUser().email, to: composeTo }))
             }
             else {
                 setComposeEmail()
@@ -65,15 +63,13 @@ export function EmailCompose() {
             loadedEmail.current = true
         }
         if ((Object.keys(email).length>0) && loadedEmail.current) {
-            // Call saveEmailWithDelay when email changes
             clearTimeout(saveTimeoutRef.current)
             saveEmailWithDelay()
         }
 
-        // Cleanup function
         return () => {
             // Clear the timeout when the component is unmounted or email changes
-            clearTimeout(saveTimeoutRef.current)
+            // clearTimeout(saveTimeoutRef.current)
         }
     }, [email])
 
@@ -90,16 +86,18 @@ export function EmailCompose() {
             ...email,
             sentAt: new Date()
         })
-        const newParams = new URLSearchParams()
-        setSearchParams(newParams)
-        loadedEmail.current = false
-        setEmail({})
+        resetSearchParams()
+    }
+    const handleDiscard = () =>{
+        emailService.remove(email.id)
+        resetSearchParams()
     }
 
     return (compose && (
         <div className="email-compose-container">
             <form className="email-compose-form">
-                <label htmlFor="to">To:</label>
+            <label className="email-compose-header">{email.subject}</label>
+            <br />
                 <input
                     type="text"
                     id="to"
@@ -109,7 +107,6 @@ export function EmailCompose() {
                     onChange={handleChange}
                 />
                 <br />
-                <label htmlFor="subject">Subject:</label>
                 <input
                     type="text"
                     id="subject"
@@ -119,7 +116,6 @@ export function EmailCompose() {
                     onChange={handleChange}
                 />
                 <br />
-                <label htmlFor="body">Body:</label>
                 <textarea
                     id="body"
                     name="body"
@@ -130,11 +126,22 @@ export function EmailCompose() {
                 <button type="button" onClick={handleSend}>
                     Send
                 </button>
+
+                <button type="button" onClick={handleDiscard}>
+                    <DeleteOutlineIcon/>
+                </button>
             </form>
         </div>
     )
 
     )
+
+    function resetSearchParams() {
+        const newParams = new URLSearchParams(searchParams)
+        newParams.delete('compose')
+        newParams.delete('composeTo')
+        setSearchParams(newParams)
+    }
 }
 
 export function EmailComposeWrapper(){

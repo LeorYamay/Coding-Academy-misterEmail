@@ -1,7 +1,10 @@
 // import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router";
+import { useSearchParams } from "react-router-dom";
 
 import { utilService } from "../services/util.service";
+
+import { emailService } from "../services/email.service";
 
 import { EmailStarred } from "./EmailStarred";
 import { EmailRead } from "./EmailRead";
@@ -17,14 +20,20 @@ import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/Indeterminate
 export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
     const navigate = useNavigate()
     const params = useParams()
+    const [searchParams,setSearchParams] = useSearchParams()
 
     function onPreviewClick() {
         if (!email.isRead){
             const newEmail = { ...email, isRead: true }
             onUpdateEmail(newEmail)
         }
-        const currentPathname = location.pathname
-        navigate(`/${params.folderId}/${email.id}`)
+        const folder = params.folderId
+        if (folder === 'draft'){
+            emailService.updateSearchParamsComposeWithId(email.id,searchParams,setSearchParams)
+        }
+        else{
+            navigate(`/${folder}/${email.id}`)            
+        }
     }
 
     function toggleReadClick(event) {
@@ -60,7 +69,14 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
                 isStarred={email.isStarred}
                 onToggleStar={onToggleStar}
             />
-            <div className="email-from">{email.from}</div>
+            {(email.from === emailService.getLoggedInUser().email) ?
+                (
+                    <div className="email-to">{`to:${email.to}`}</div>
+                ) : (
+                    <div className="email-from">{email.from}</div>
+
+                )    
+            }
             <div className="email-subject">{email.subject}</div>
             <div className="email-body">{email.body}</div>
             <div className="email-button email-archive-button"><ArchiveOutlinedIcon /></div>
