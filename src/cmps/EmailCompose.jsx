@@ -3,7 +3,8 @@ import { useSearchParams } from "react-router-dom"
 import { emailService } from "../services/email.service"
 import { useEffect, useRef, useState } from "react"
 
-import useEffectOnlyOnUpdate from "../hooks/useEffectOnUpdate"
+import { showErrorMsg } from "../services/event-bus.service";
+import { showSuccessMsg } from "../services/event-bus.service";
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
@@ -29,6 +30,7 @@ export function EmailCompose() {
                         emailService.updateSearchParamsComposeWithId(email.id,searchParams,setSearchParams)
                     }
                 } catch (error) {
+                    showErrorMsg("Error saving email:", error)
                     console.error("Error saving email:", error)
                 }
             }, 3000)
@@ -39,15 +41,18 @@ export function EmailCompose() {
 
         async function setComposeEmail() {
             if (email.id != compose) {
-                const composeEmail = await emailService.getById(compose)
                 try {
+                    const composeEmail = await emailService.getById(compose)
                     if (composeEmail.sentAt) {
-                        throw ('Email already sent and cannot be edited')
+                        showErrorMsg('Email already sent and cannot be edited')
+                        resetSearchParams()
                     }
                     setEmail(composeEmail)
                 }
                 catch (error) {
                     console.error('An error occured when trying to edit email', error)
+                    showErrorMsg('An error occured when trying to edit email', error)
+                    resetSearchParams()
                 }
             }
         }
@@ -55,7 +60,9 @@ export function EmailCompose() {
         if (!loadedEmail.current) {
             if (compose === 'new') {
                 const composeTo = searchParams.get('composeTo')
-                setEmail(emailService.createEmail({ from: emailService.getLoggedInUser().email, to: composeTo }))
+                setEmail(emailService.createEmail({ from: emailService.getLoggedInUser().email,
+                     to: composeTo,
+                     isRead:true}))
             }
             else {
                 setComposeEmail()
@@ -89,7 +96,15 @@ export function EmailCompose() {
         resetSearchParams()
     }
     const handleDiscard = () =>{
-        emailService.remove(email.id)
+        if (email.removedAt){
+            emailService.remove(email.id)
+        }
+        else{
+            emailService.save({
+                ...email,
+                removedAt: new Date()
+            }) 
+        }
         resetSearchParams()
     }
 

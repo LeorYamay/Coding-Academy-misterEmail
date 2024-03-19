@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { emailService } from "../services/email.service";
 
 import { EmailDetailNavBar } from "../cmps/EmailDetailsNavBar";
+import { utilService } from "../services/util.service";
 
 export function EmailDetails() {
     const [email, setEmail] = useState(null)
@@ -44,9 +45,9 @@ export function EmailDetails() {
            <div className="email-details-subject">{email.subject}</div>
             <div className="email-details-from">{email.from}</div>
             <div className="email-details-to">{`to ${email.to}`}</div>
-            <div className="email-details-sentAt">{email.sentAt}</div>
+            <div className="email-details-sentAt">{utilService.formatDate(email.sentAt)}</div>
            <div className="email-details-body">{email.body}</div>
-           <div>{email.removedAt}</div>
+           <div>{utilService.formatDate(email.removedAt)}</div>
         </section>
     )
 }

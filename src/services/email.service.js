@@ -83,21 +83,22 @@ function updateSearchParamsComposeWithId(id,searchParams,setSearchParams) {
 }
 
 function getFilterFromFolder(folder){
+    const filterBy = {inTrash:false}
     switch (folder){
         case 'inbox':
-            return {to:getLoggedInUser().email}
+            return {...filterBy,to:getLoggedInUser().email}
             break
         case 'starred':
-            return {isStarred:true}
+            return {...filterBy,isStarred:true}
             break
         case 'sent':
-            return {from:getLoggedInUser().email}
+            return {...filterBy,from:getLoggedInUser().email}
             break
         case 'draft':
-            return {draft:true}
+            return {...filterBy,draft:true}
             break
         case 'trash':
-            return {inTrash:true}
+            return {...filterBy,inTrash:true}
             break
     }
 }

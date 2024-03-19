@@ -9,7 +9,7 @@ import { EmailList } from './cmps/EmailList.jsx'
 import { SearchBar } from './cmps/SearchBar.jsx'
 import { NavBar } from "./cmps/NavBar.jsx"
 import { EmailComposeWrapper } from './cmps/EmailCompose.jsx'
-
+import { UserMsg } from './cmps/UserMsg.jsx'
 
 
 export function App() {
@@ -28,6 +28,7 @@ export function App() {
         </main>
       </section>
       <EmailComposeWrapper />
+      <UserMsg/>
     </Router>
   )
 }
