@@ -108,10 +108,10 @@ export function EmailCompose() {
         resetSearchParams()
     }
 
-    return (compose && (
+    return (
         <div className="email-compose-container">
             <form className="email-compose-form">
-            <label className="email-compose-header">{email.subject}</label>
+            <label className="email-compose-header">{email.subject?email.subject:'New Message'}</label>
             <br />
                 <input
                     type="text"
@@ -147,8 +147,6 @@ export function EmailCompose() {
                 </button>
             </form>
         </div>
-    )
-
     )
 
     function resetSearchParams() {
