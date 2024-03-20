@@ -8,7 +8,7 @@ import { emailService } from "../services/email.service";
 
 import { EmailStarred } from "./EmailStarred";
 import { EmailRead } from "./EmailRead";
-import "../assets/css/cmps/EmailPreview.css";
+import { CheckBox } from "./CheckBox";
 
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
@@ -17,15 +17,13 @@ import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 
 
-export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
+export function EmailPreview({ email, onUpdateEmail, onRemoveEmail ,onSelectEmail, isSelected }) {
     const navigate = useNavigate()
     const params = useParams()
     const [searchParams,setSearchParams] = useSearchParams()
-
     function onPreviewClick() {
         if (!email.isRead){
-            const newEmail = { ...email, isRead: true }
-            onUpdateEmail(newEmail)
+            onToggleRead()
         }
         const folder = params.folderId
         if (folder === 'draft'){
@@ -36,20 +34,13 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
         }
     }
 
-    function toggleReadClick(event) {
-        event.stopPropagation()
-        const newEmail = { ...email, isRead: !email.isRead }
-        onUpdateEmail(newEmail)
-    }
-
     function deleteEmailClick(event) {
         event.stopPropagation()
         if (email.removedAt) {
             onRemoveEmail(email.id)
         }
         else {
-            const newEmail = { ...email, removedAt: Date.now() }
-            onUpdateEmail(newEmail)
+            onUpdateEmail({ ...email, removedAt: Date.now() })
         }
     }
     const onToggleStar = ()=>{
@@ -59,12 +50,16 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail }) {
     const onToggleRead = ()=>{
         onUpdateEmail({...email,isRead: !(email.isRead)})
     }
+
     const emailClass = `email-preview ${email.isRead ? 'email-read' : 'email-notread'}`;
 
     return (
 
         <article className={emailClass} onClick={onPreviewClick}>
-            <CheckBoxOutlineBlankOutlinedIcon/>
+            <CheckBox
+                onToggle = {() => onSelectEmail(email.id)}
+                // status = {isSelected}
+            />
             <EmailStarred
                 isStarred={email.isStarred}
                 onToggleStar={onToggleStar}

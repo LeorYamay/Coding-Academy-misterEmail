@@ -1,15 +1,16 @@
 import { useEffect, useRef } from 'react'
 
-function useEffectOnlyOnUpdate(callback) {
+function useEffectOnUpdate(callback,dependancies) {
     const firstUpdate = useRef(true)
 
     useEffect(() => {
         if (firstUpdate.current) {
             firstUpdate.current = false
+            return
         } else {
-            callback()
+            return callback()
         }
-    }, [callback])
+    }, dependancies)
 }
 
-export default useEffectOnlyOnUpdate
+export default useEffectOnUpdate

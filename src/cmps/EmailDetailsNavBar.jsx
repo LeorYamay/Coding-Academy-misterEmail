@@ -8,7 +8,7 @@ import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined';
 
 import { EmailRead } from "./EmailRead";
 
-export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
+export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail,}) {
     const params = useParams()
     const folder = `/${params.folderId}`
 
@@ -20,7 +20,7 @@ export function EmailDetailNavBar({email,onUpdateEmail,onRemoveEmail}) {
         <Link to={folder}><ArrowBackIcon /></Link>
         <ArchiveOutlinedIcon/>
         <ReportIcon/>
-        <div><DeleteOutlineIcon /></div>
+        <div onClick={onRemoveEmail}><DeleteOutlineIcon /></div>
         |
         <EmailRead
             isRead={email.isRead}
