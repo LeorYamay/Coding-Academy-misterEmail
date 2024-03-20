@@ -11,7 +11,8 @@ export function CheckBox({ onToggle}) {
     const boxClick = (event) => {
 
         event.stopPropagation()
-        setBoxState(onToggle)
+        onToggle()
+        setBoxState('empty')
     }
     useEffect(() => {
         switch (boxState) {

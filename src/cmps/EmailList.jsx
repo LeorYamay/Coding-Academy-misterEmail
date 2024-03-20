@@ -9,12 +9,12 @@ export function EmailList({ emails, onRemoveEmail, onUpdateEmail }) {
         if (selectedEmails.some(email=>email.id===emailId))
         {
             setSelectedEmails(selectedEmails.filter(id => id !== emailId))
-            return 'empty'
+            // return 'empty'
         }
         else
         {
             setSelectedEmails([...selectedEmails, emailId])
-            return 'checked'
+            // return 'checked'
         }
         
     }
@@ -22,12 +22,12 @@ export function EmailList({ emails, onRemoveEmail, onUpdateEmail }) {
         const isSelected = selectedEmails.length >0
         if (isSelected){
             setSelectedEmails([])
-            return 'empty'
+            // return 'empty'
         }
         else
         {
             setSelectedEmails(emails.map(email => email.id))
-            return 'checked'
+            // return 'checked'
         }
     }
     const mapSelectToText = (emailId) => {
