@@ -39,7 +39,7 @@ function filter(emails, filterBy) {
             const isSentBefore = sentBefore ? sentBefore < email.sentAt : true;
             const isSentAfter = sentAfter ? sentAfter > email.sentAt : true;
             const isDraft = (draft == null) || (email.sentAt == null)
-            const isInTrashMatch = (inTrash == null) || (!inTrash ? !(email.removedAt) : (email.removedAt));
+            const isInTrashMatch = (inTrash == null) || (inTrash ? !!(email.removedAt) : !(email.removedAt));
             const isFromMatch = from ? utilService.stringContainsIgnoreCase(email.from, from) : true;
             const isToMatch = to ? utilService.stringContainsIgnoreCase(email.to, to) : true;
             const isTextMatch = hasText ?
@@ -60,6 +60,9 @@ function filter(emails, filterBy) {
                 isToMatch &&
                 isTextMatch &&
                 isTextExcludeMatch
+                if (inTrash && (email.removedAt || !fitlerRes)){
+                    console.log("email.removedAt ",email.removedAt," fitlerRes",fitlerRes)
+                }
             return fitlerRes
         })
     }

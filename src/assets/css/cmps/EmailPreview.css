@@ -27,9 +27,10 @@
     align-items: inherit;
 }
 
-.email-button{
+.email-button:not(.checkbox){
     display: none;
 }
+
 .email-preview:hover .email-button{
     display: inherit;
 }

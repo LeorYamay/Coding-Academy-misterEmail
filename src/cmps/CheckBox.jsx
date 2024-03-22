@@ -4,18 +4,19 @@ import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlin
 import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 
-export function CheckBox({ onToggle}) {
-    const [boxState, setBoxState] = useState('empty')
-    const [ boxIcon, setBoxIcon] = useState()
+export function CheckBox({ isSelected, onToggle,buttonType='' }) {
+    // const [boxState, setBoxState] = useState(isSelected)
+    const [boxIcon, setBoxIcon] = useState()
     // debugger
+    // useEffect(()=>{
+    //     console.log("isSelected",isSelected)
+    // },[isSelected])
     const boxClick = (event) => {
-
         event.stopPropagation()
         onToggle()
-        setBoxState('empty')
     }
     useEffect(() => {
-        switch (boxState) {
+        switch (isSelected) {
             case 'empty':
                 setBoxIcon(<CheckBoxOutlineBlankOutlinedIcon />)
                 break
@@ -26,11 +27,9 @@ export function CheckBox({ onToggle}) {
                 setBoxIcon(<CheckBoxOutlinedIcon />)
                 break
         }
-
-    }
-        , [boxState])
+    }, [isSelected])
     return (
-        <div className='checkbox' onClick={boxClick}>
+        <div className={`${buttonType} checkbox`} onClick={boxClick}>
             {boxIcon}
         </div>
     )

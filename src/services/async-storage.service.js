@@ -1,3 +1,6 @@
+import AsyncLock from 'async-lock'
+const lock = new AsyncLock()
+
 export const storageService = {
     query,
     get,
@@ -19,18 +22,20 @@ function get(entityType, entityId) {
     })
 }
 
-function post(entityType, newEntity) {
-    newEntity = { ...newEntity }
-    newEntity.id = _makeId()
-    return query(entityType).then(entities => {
+async function post(entityType, newEntity) {
+    return lock.acquire(entityType, async () => {
+        newEntity = { ...newEntity }
+        newEntity.id = _makeId()
+        const entities = await query(entityType)
         entities.push(newEntity)
         _save(entityType, entities)
         return newEntity
     })
 }
 
-function put(entityType, updatedEntity) {
-    return query(entityType).then(entities => {
+async function put(entityType, updatedEntity) {
+    return lock.acquire(entityType, async () => {
+        const entities = await query(entityType)
         const idx = entities.findIndex(entity => entity.id === updatedEntity.id)
         if (idx < 0) throw new Error(`Update failed, cannot find entity with id: ${updatedEntity.id} in: ${entityType}`)
         entities.splice(idx, 1, updatedEntity)
@@ -39,14 +44,16 @@ function put(entityType, updatedEntity) {
     })
 }
 
-function remove(entityType, entityId) {
-    return query(entityType).then(entities => {
+async function remove(entityType, entityId) {
+    return lock.acquire(entityType, async () => {
+        const entities = await query(entityType)
         const idx = entities.findIndex(entity => entity.id === entityId)
         if (idx < 0) throw new Error(`Remove failed, cannot find entity with id: ${entityId} in: ${entityType}`)
         entities.splice(idx, 1)
         _save(entityType, entities)
     })
 }
+
 
 // Private functions
 

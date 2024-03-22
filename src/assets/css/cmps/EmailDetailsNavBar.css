@@ -4,7 +4,7 @@
     justify-content:start;
     padding: 5px;
 }
-.email-details-navbar >*:hover{
+.email-details-navbar-item:hover{
     content: attr(alt);
     background-color:  darkgray;
     /* color: transparent; */
@@ -13,4 +13,10 @@
     /* border: 2px solid black; */
     /* display: block; */
     cursor: pointer;
+}
+.navbar-items{
+    display: inherit;
+}
+.email-details-navbar .checkbox:hover{
+    border-radius:5px;
 }

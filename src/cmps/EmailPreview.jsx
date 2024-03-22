@@ -21,6 +21,7 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail ,onSelectEmai
     const navigate = useNavigate()
     const params = useParams()
     const [searchParams,setSearchParams] = useSearchParams()
+
     function onPreviewClick() {
         if (!email.isRead){
             onToggleRead()
@@ -58,7 +59,8 @@ export function EmailPreview({ email, onUpdateEmail, onRemoveEmail ,onSelectEmai
         <article className={emailClass} onClick={onPreviewClick}>
             <CheckBox
                 onToggle = {() => onSelectEmail(email.id)}
-                // status = {isSelected}
+                isSelected = {isSelected}
+                buttonType={"email-button"}
             />
             <EmailStarred
                 isStarred={email.isStarred}

@@ -13,27 +13,38 @@ import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/Indeterminate
 import { EmailRead } from "./EmailRead";
 import { CheckBox } from "./CheckBox";
 
-export function EmailListNavBar({emails,onUpdateEmail,onRemoveEmail,onSelectEmails}) {
+export function EmailListNavBar({ selectedEmails, onUpdateEmails, onRemoveEmails, onSelectEmails, isSelected, areRead }) {
     const params = useParams()
+
     const folder = `/${params.folderId}`
 
-    const isRead = emails.some(email=>!email.isRead)?false:true
-
-    const onToggleRead = ()=>{        
-        // onUpdateEmail({...email,isRead: !email.isRead})
+    const onToggleRead = () => {
+        onUpdateEmails({ isRead: areRead })
     }
 
-    return <nav className="email-details-navbar">
-        <CheckBox
-            onToggle ={onSelectEmails}
-        />
-        <ArchiveOutlinedIcon/>
-        <ReportIcon/>
-        {/* <div onClick={onRemoveEmail}><DeleteOutlineIcon /></div> */}
-        |
-        <EmailRead
-            isRead={isRead}
-            onToggleRead ={onToggleRead}
-        />
-    </nav>
+    return (
+        <nav className="email-details-navbar">
+            <CheckBox
+                onToggle={onSelectEmails}
+                isSelected={isSelected}
+                buttonType={"email-details-navbar-item"}
+            />
+            {isSelected != 'empty' && (
+                <div className="navbar-items">
+                    <div className="email-details-navbar-item">
+                        <ArchiveOutlinedIcon />
+                    </div>
+                    <div className="email-details-navbar-item">
+                        <ReportIcon />
+                    </div>
+                    <div className="email-details-navbar-item" onClick={onRemoveEmails}><DeleteOutlineIcon /></div>
+                    <EmailRead
+                        isRead={areRead}
+                        onToggleRead={onToggleRead}
+                        buttonType={"email-details-navbar-item"}
+                    />
+                </div>
+            )}
+        </nav>
+    )
 }

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { useParams, useSearchParams } from "react-router-dom"
 
 import { emailService } from "../services/email.service"
-import { showErrorMsg } from "../services/event-bus.service";
-import { showSuccessMsg } from "../services/event-bus.service";
+import { showErrorMsg } from "../services/event-bus.service"
+import { showSuccessMsg } from "../services/event-bus.service"
 
 import { EmailList } from "../cmps/EmailList.jsx"
 import { EmailPreview } from "../cmps/EmailPreview.jsx"
@@ -53,17 +53,21 @@ export function EmailIndex() {
             showErrorMsg('Error in onRemoveEmail', err)
         }
     }
-
+    
     async function onUpdateEmail(email) {
         try {
             const updatedEmail = await emailService.save(email)
-            setEmails(prevEmails =>
-                emailService.filter((prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)), filterBy))
+            setEmails(prevEmails => {
+                const updatedEmails = prevEmails.map(currEmail => currEmail.id === updatedEmail.id ? updatedEmail : currEmail)
+                const filteredEmails = emailService.filter(updatedEmails, filterBy)
+                return filteredEmails
+            })
         } catch (err) {
             console.log('Error in onUpdateEmail', err)
             showErrorMsg('Error in onUpdateEmail', err)
         }
     }
+
     const onUpdateEmailAndFilter = async (email) => {
         onUpdateEmail(email)
     }
