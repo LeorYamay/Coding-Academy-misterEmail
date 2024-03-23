@@ -22,35 +22,85 @@ function get(entityType, entityId) {
     })
 }
 
+const storageActionsTimeFrame = 50
+const postRequests = {}
 async function post(entityType, newEntity) {
-    return lock.acquire(entityType, async () => {
-        newEntity = { ...newEntity }
-        newEntity.id = _makeId()
-        const entities = await query(entityType)
-        entities.push(newEntity)
-        _save(entityType, entities)
-        return newEntity
+    if (!postRequests[entityType]) {
+        postRequests[entityType] = []
+    }
+
+    return new Promise((resolve, reject) => {
+        postRequests[entityType].push({ resolve, reject, newEntity })
+
+        setTimeout(async () => {
+            if (postRequests[entityType].length > 0) {
+                await lock.acquire(entityType, async () => {
+                    const entities = await query(entityType)
+                    postRequests[entityType].forEach(({ resolve, newEntity }) => {
+                        newEntity = { ...newEntity }
+                        newEntity.id = _makeId()
+                        entities.push(newEntity)
+                        resolve(newEntity)
+                    })
+                    _save(entityType, entities)
+                    delete postRequests[entityType]
+                })
+            }
+        }, storageActionsTimeFrame)
     })
 }
 
+const putRequests = {}
 async function put(entityType, updatedEntity) {
-    return lock.acquire(entityType, async () => {
-        const entities = await query(entityType)
-        const idx = entities.findIndex(entity => entity.id === updatedEntity.id)
-        if (idx < 0) throw new Error(`Update failed, cannot find entity with id: ${updatedEntity.id} in: ${entityType}`)
-        entities.splice(idx, 1, updatedEntity)
-        _save(entityType, entities)
-        return updatedEntity
+    if (!putRequests[entityType]) {
+        putRequests[entityType] = []
+    }
+
+    return new Promise((resolve, reject) => {
+        putRequests[entityType].push({ resolve, reject, updatedEntity });
+
+        setTimeout(async () => {
+            if (putRequests[entityType].length > 0) {
+                await lock.acquire(entityType, async () => {
+                    const entities = await query(entityType);
+                    putRequests[entityType].forEach(({ resolve, updatedEntity }) => {
+                        const idx = entities.findIndex(entity => entity.id === updatedEntity.id);
+                        if (idx < 0) throw new Error(`Update failed, cannot find entity with id: ${updatedEntity.id} in: ${entityType}`)
+                        entities.splice(idx, 1, updatedEntity);
+                        resolve(updatedEntity)
+                    })
+                    _save(entityType, entities)
+                    delete putRequests[entityType]
+                })
+            }
+        }, storageActionsTimeFrame)
     })
 }
 
+const removeRequests ={}
 async function remove(entityType, entityId) {
-    return lock.acquire(entityType, async () => {
-        const entities = await query(entityType)
-        const idx = entities.findIndex(entity => entity.id === entityId)
-        if (idx < 0) throw new Error(`Remove failed, cannot find entity with id: ${entityId} in: ${entityType}`)
-        entities.splice(idx, 1)
-        _save(entityType, entities)
+    if (!removeRequests[entityType]) {
+        removeRequests[entityType] = []
+    }
+
+    return new Promise((resolve, reject) => {
+        removeRequests[entityType].push({ resolve, reject, entityId })
+
+        setTimeout(async () => {
+            if (removeRequests[entityType].length > 0) {
+                await lock.acquire(entityType, async () => {
+                    const entities = await query(entityType)
+                    removeRequests[entityType].forEach(({ resolve, entityId }) => {
+                        const idx = entities.findIndex(entity => entity.id === entityId)
+                        if (idx < 0) throw new Error(`Remove failed, cannot find entity with id: ${entityId} in: ${entityType}`)
+                        entities.splice(idx, 1)
+                        resolve()
+                    })
+                    _save(entityType, entities)
+                    delete removeRequests[entityType]
+                })
+            }
+        }, storageActionsTimeFrame)
     })
 }
 
