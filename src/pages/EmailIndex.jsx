@@ -19,20 +19,15 @@ export function EmailIndex() {
     const [searchParams, setSearchParams] = useSearchParams()
     
     useEffect(() => {
-        setFilterBy(emailService.getFilterFromSearchParams(searchParams))
-    }, [searchParams])
-
-    useEffect(()=>{
-        setFilterBy(emailService.getFilterFromFolder(params.folderId))
-    },[params])
+        const filterByTemp =emailService.getFilterFromSearchParams(searchParams)
+        setFilterBy({...filterByTemp,...emailService.getFilterFromFolder(params.folderId)})
+    }, [searchParams,params])
 
     useEffect(() => {
         loadEmails()
     }, [filterBy])
 
-    function onSetFilter(fieldsToUpdate) {
-        setFilterBy(prevFilter => ({ ...prevFilter, ...fieldsToUpdate }))
-    }
+
 
     async function loadEmails() {
         try {

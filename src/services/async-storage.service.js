@@ -37,8 +37,7 @@ async function post(entityType, newEntity) {
                 await lock.acquire(entityType, async () => {
                     const entities = await query(entityType)
                     postRequests[entityType].forEach(({ resolve, newEntity }) => {
-                        newEntity = { ...newEntity }
-                        newEntity.id = _makeId()
+                        newEntity = { ...newEntity ,id:_makeId()}
                         entities.push(newEntity)
                         resolve(newEntity)
                     })

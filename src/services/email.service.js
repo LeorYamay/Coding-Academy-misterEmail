@@ -60,9 +60,6 @@ function filter(emails, filterBy) {
                 isToMatch &&
                 isTextMatch &&
                 isTextExcludeMatch
-                if (inTrash && (email.removedAt || !fitlerRes)){
-                    console.log("email.removedAt ",email.removedAt," fitlerRes",fitlerRes)
-                }
             return fitlerRes
         })
     }

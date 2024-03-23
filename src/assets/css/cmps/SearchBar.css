@@ -12,7 +12,7 @@
 .filter-form {
     display: block;
     z-index: 999;
-    position: relative;
+    position: fixed;
     background-color: white; /* Set white background color */
     border: 1px solid black; /* Add a thin black border */
 }

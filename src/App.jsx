@@ -17,18 +17,18 @@ export function App() {
   return (
     <Router>
       <section className='main-app'>
-        <SearchBar/>
-        <NavBar/>
+        <SearchBar />
+        <NavBar />
         <main className='container'>
           <Routes>
-          <Route path="/" element={<Navigate to="/inbox" />} />
-            <Route path="/:folderId" element={<EmailIndex />}/>
+            <Route path="/" element={<Navigate to="/inbox" />} />
+            <Route path="/:folderId" element={<EmailIndex />} />
             <Route path="/:folderId/:emailId" element={<EmailDetails />} />
           </Routes>
         </main>
       </section>
       <EmailComposeWrapper />
-      <UserMsg/>
+      <UserMsg />
     </Router>
   )
 }

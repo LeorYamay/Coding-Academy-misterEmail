@@ -1,8 +1,10 @@
 .nav-bar{
     grid-column: 1 /span 1;
     grid-row: 1 / span 2;
-    border: solid thin black;
+    
     align-content: space-between;
+    display: flex;
+    flex-direction: column;
 }
 
 .nav-bar-logo-toggle{
@@ -14,3 +16,28 @@
     align-items: center;
 }
 
+/* .active{
+    background-color: #a8c7fa;
+    border-top-right-radius: 10px; 
+    border-bottom-right-radius: 10px;
+} */
+
+.nav-bar > a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+/* Apply active styles to NavLink */
+.nav-bar > a.active {
+    background-color: #a8c7fa;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+/* Icon styling */
+.nav-bar > a > svg {
+    margin-right: 5px; /* Add margin to the right of the icon */
+}
